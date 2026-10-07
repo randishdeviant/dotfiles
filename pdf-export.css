@@ -1,0 +1,363 @@
+/* ==========================================================================
+ *  Obsidian PDF Export Custom Theme (Mode Terang / Print Optimized)
+ *  ========================================================================== */
+
+@media print {
+    /* Pengaturan Halaman A4 & Margin PDF */
+    @page {
+        margin: 15mm 15mm 15mm 15mm;
+        size: A4;
+    }
+
+    /* Root & Pengaturan Dasar Dokumen */
+    body, .print, .markdown-rendered {
+        background-color: #FFFFFF !important;
+        color: #191C20 !important; /* Stone Slate untuk keterbacaan tinggi */
+        font-size: 10.5pt !important;
+        line-height: 1.6 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* --------------------------------------------------------------------------
+     *    1. HEADING / JUDUL
+     *    -------------------------------------------------------------------------- */
+    .markdown-rendered h1,
+    .markdown-rendered h2,
+    .markdown-rendered h3,
+    .markdown-rendered h4,
+    .markdown-rendered h5,
+    .markdown-rendered h6 {
+        page-break-after: avoid;
+        break-after: avoid;
+        font-family: inherit;
+    }
+
+    .markdown-rendered h1 {
+        color: #0C0D0F !important; /* Void Black */
+        font-size: 20pt !important;
+        font-weight: 700 !important;
+        border-bottom: 2px solid #E67E22 !important; /* Amber Orange Accent */
+        padding-bottom: 4px !important;
+        margin-top: 18pt !important;
+        margin-bottom: 10pt !important;
+    }
+
+    .markdown-rendered h2 {
+        color: #D35400 !important; /* Amber Orange Gelap untuk Kontras Cetak */
+        font-size: 15pt !important;
+        font-weight: 700 !important;
+        border-bottom: 1px solid #343A42 !important;
+        padding-bottom: 3px !important;
+        margin-top: 14pt !important;
+        margin-bottom: 8pt !important;
+    }
+
+    .markdown-rendered h3 {
+        color: #20242A !important;
+        font-size: 13pt !important;
+        font-weight: 600 !important;
+        margin-top: 12pt !important;
+        margin-bottom: 6pt !important;
+    }
+
+    .markdown-rendered h4 {
+        color: #343A42 !important;
+        font-size: 11pt !important;
+        font-weight: 600 !important;
+        margin-top: 10pt !important;
+        margin-bottom: 4pt !important;
+    }
+
+    .markdown-rendered h5 {
+        color: #706F6E !important;
+        font-size: 10pt !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+    }
+
+    .markdown-rendered h6 {
+        color: #706F6E !important;
+        font-size: 9.5pt !important;
+        font-weight: 500 !important;
+        font-style: italic !important;
+    }
+
+    /* --------------------------------------------------------------------------
+     *    2. FORMAT TEKS (Bold, Italic, Bold Italic, Strikethrough, Inline Code, Highlight)
+     *    -------------------------------------------------------------------------- */
+    /* Bold */
+    .markdown-rendered strong,
+    .markdown-rendered b {
+        color: #0C0D0F !important;
+        font-weight: 700 !important;
+    }
+
+    /* Italic */
+    .markdown-rendered em,
+    .markdown-rendered i {
+        color: #262A30 !important;
+        font-style: italic !important;
+    }
+
+    /* Bold Italic */
+    .markdown-rendered strong em,
+    .markdown-rendered em strong,
+    .markdown-rendered b i,
+    .markdown-rendered i b {
+        color: #0C0D0F !important;
+        font-weight: 700 !important;
+        font-style: italic !important;
+    }
+
+    /* Strikethrough */
+    .markdown-rendered del,
+    .markdown-rendered s {
+        color: #706F6E !important;
+        text-decoration: line-through !important;
+    }
+
+    /* Highlight */
+    .markdown-rendered mark {
+        background-color: #FEF3C7 !important; /* Soft Amber Highlight */
+        color: #78350F !important;
+        border-radius: 3px !important;
+        padding: 1px 4px !important;
+    }
+
+    /* Inline Code */
+    .markdown-rendered code {
+        background-color: #F1F3F5 !important;
+        color: #C0392B !important; /* Kontras Tinggi di Kertas */
+        border: 1px solid #DEDCD6 !important;
+        border-radius: 3px !important;
+        padding: 2px 5px !important;
+        font-size: 0.9em !important;
+        font-family: var(--font-monospace, monospace) !important;
+    }
+
+    /* --------------------------------------------------------------------------
+     *    3. CODE BLOCK
+     *    -------------------------------------------------------------------------- */
+    .markdown-rendered pre {
+        background-color: #F8F9FA !important;
+        border: 1px solid #343A42 !important;
+        border-left: 4px solid #E67E22 !important; /* Accent Bar Left */
+        border-radius: 4px !important;
+        padding: 10px 14px !important;
+        margin: 1em 0 !important;
+        white-space: pre-wrap !important;
+        word-break: break-all !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .markdown-rendered pre code {
+        background-color: transparent !important;
+        border: none !important;
+        color: #191C20 !important;
+        padding: 0 !important;
+        font-size: 8.5pt !important;
+        line-height: 1.45 !important;
+    }
+
+    /* --------------------------------------------------------------------------
+     *    4. QUOTE BLOCK (BLOCKQUOTE)
+     *    -------------------------------------------------------------------------- */
+    .markdown-rendered blockquote {
+        background-color: #F8F9FA !important;
+        border: none !important;
+        border-left: 4px solid #E67E22 !important;
+        color: #262A30 !important;
+        margin: 1em 0 !important;
+        padding: 8px 14px !important;
+        border-radius: 0 4px 4px 0 !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    /* --------------------------------------------------------------------------
+     *    5. TABEL
+     *    -------------------------------------------------------------------------- */
+    .markdown-rendered table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin: 1em 0 !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        border: 1px solid #343A42 !important;
+    }
+
+    .markdown-rendered th {
+        background-color: #20242A !important; /* Dark Header Tegas */
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
+        padding: 8px 12px !important;
+        border: 1px solid #343A42 !important;
+        text-align: left !important;
+    }
+
+    .markdown-rendered td {
+        padding: 7px 12px !important;
+        border: 1px solid #DEDCD6 !important;
+        color: #191C20 !important;
+        background-color: #FFFFFF !important;
+    }
+
+    .markdown-rendered tr:nth-child(even) td {
+        background-color: #F8F9FA !important; /* Selang-seling Baris */
+    }
+
+    /* --------------------------------------------------------------------------
+     *    6. LIST, TASK LIST & LINKS
+     *    -------------------------------------------------------------------------- */
+    .markdown-rendered ul li::marker {
+        color: #E67E22 !important;
+    }
+
+    .markdown-rendered ol li::marker {
+        color: #E67E22 !important;
+        font-weight: bold !important;
+    }
+
+    .markdown-rendered a {
+        color: #D35400 !important;
+        text-decoration: underline !important;
+    }
+
+    .task-list-item-checkbox {
+        border: 1px solid #343A42 !important;
+        border-radius: 3px !important;
+    }
+
+    /* --------------------------------------------------------------------------
+     *    7. CALLOUT BLOCKS (PDF LIGHT MODE)
+     *    -------------------------------------------------------------------------- */
+    .markdown-rendered .callout {
+        background-color: #F8FAFC !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 6px !important;
+        margin: 1em 0 !important;
+        padding: 10px 14px !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    /* Note */
+    .markdown-rendered .callout[data-callout="note"] {
+        border-left: 4px solid #0284C7 !important;
+        background-color: #F0F9FF !important;
+    }
+    .markdown-rendered .callout[data-callout="note"] .callout-title {
+        color: #0369A1 !important;
+    }
+
+    /* Tip / Hint */
+    .markdown-rendered .callout[data-callout="tip"],
+    .markdown-rendered .callout[data-callout="hint"] {
+        border-left: 4px solid #059669 !important;
+        background-color: #ECFDF5 !important;
+    }
+    .markdown-rendered .callout[data-callout="tip"] .callout-title,
+    .markdown-rendered .callout[data-callout="hint"] .callout-title {
+        color: #047857 !important;
+    }
+
+    /* Warning / Caution */
+    .markdown-rendered .callout[data-callout="warning"],
+    .markdown-rendered .callout[data-callout="caution"] {
+        border-left: 4px solid #D97706 !important;
+        background-color: #FFFBEB !important;
+    }
+    .markdown-rendered .callout[data-callout="warning"] .callout-title,
+    .markdown-rendered .callout[data-callout="caution"] .callout-title {
+        color: #B45309 !important;
+    }
+
+    /* Question / Help / FAQ */
+    .markdown-rendered .callout[data-callout="question"],
+    .markdown-rendered .callout[data-callout="help"],
+    .markdown-rendered .callout[data-callout="faq"] {
+        border-left: 4px solid #7C3AED !important;
+        background-color: #F5F3FF !important;
+    }
+    .markdown-rendered .callout[data-callout="question"] .callout-title,
+    .markdown-rendered .callout[data-callout="help"] .callout-title,
+    .markdown-rendered .callout[data-callout="faq"] .callout-title {
+        color: #6D28D9 !important;
+    }
+
+    /* Example */
+    .markdown-rendered .callout[data-callout="example"] {
+        border-left: 4px solid #0D9488 !important;
+        background-color: #F0FDFA !important;
+    }
+    .markdown-rendered .callout[data-callout="example"] .callout-title {
+        color: #0F766E !important;
+    }
+
+    /* Quote / Cite */
+    .markdown-rendered .callout[data-callout="quote"],
+    .markdown-rendered .callout[data-callout="cite"] {
+        border-left: 4px solid #4F46E5 !important;
+        background-color: #EEF2FF !important;
+    }
+    .markdown-rendered .callout[data-callout="quote"] .callout-title,
+    .markdown-rendered .callout[data-callout="cite"] .callout-title {
+        color: #4338CA !important;
+    }
+
+    /* Abstract / Summary / TLDR */
+    .markdown-rendered .callout[data-callout="abstract"],
+    .markdown-rendered .callout[data-callout="summary"],
+    .markdown-rendered .callout[data-callout="tldr"] {
+        border-left: 4px solid #2563EB !important;
+        background-color: #EFF6FF !important;
+    }
+    .markdown-rendered .callout[data-callout="abstract"] .callout-title,
+    .markdown-rendered .callout[data-callout="summary"] .callout-title,
+    .markdown-rendered .callout[data-callout="tldr"] .callout-title {
+        color: #1D4ED8 !important;
+    }
+
+    /* Danger / Error */
+    .markdown-rendered .callout[data-callout="danger"],
+    .markdown-rendered .callout[data-callout="error"] {
+        border-left: 4px solid #DC2626 !important;
+        background-color: #FEF2F2 !important;
+    }
+    .markdown-rendered .callout[data-callout="danger"] .callout-title,
+    .markdown-rendered .callout[data-callout="error"] .callout-title {
+        color: #B91C1C !important;
+    }
+
+    /* Success / Check */
+    .markdown-rendered .callout[data-callout="success"],
+    .markdown-rendered .callout[data-callout="check"] {
+        border-left: 4px solid #16A34A !important;
+        background-color: #F0FDF4 !important;
+    }
+    .markdown-rendered .callout[data-callout="success"] .callout-title,
+    .markdown-rendered .callout[data-callout="check"] .callout-title {
+        color: #15803D !important;
+    }
+
+    /* --------------------------------------------------------------------------
+     *    8. GARIS PEMISAH & TAG
+     *    -------------------------------------------------------------------------- */
+    .markdown-rendered hr {
+        border: none !important;
+        height: 1px !important;
+        background-color: #E67E22 !important;
+        margin: 1.5em 0 !important;
+    }
+
+    .markdown-rendered .tag {
+        background-color: #F1F3F5 !important;
+        color: #D35400 !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 10px !important;
+        padding: 1px 8px !important;
+        font-size: 0.8em !important;
+    }
+}

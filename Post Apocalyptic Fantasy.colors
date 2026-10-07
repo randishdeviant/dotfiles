@@ -1,0 +1,97 @@
+/* ==========================================================================
+   Obsidian Theme Snippet: Ember & Slate (Dark Mode)
+   ========================================================================== */
+
+.theme-dark {
+  /* --- Color Palette Variables --- */
+  --void-black: #0D0D0F;
+  --ash-grey: #1E2025;
+  --stone-slate: #2C3038;
+  --bone-white: #E8E6E3;
+  --dusty-grey: #9CA3AF;
+  --ember-orange: #E67E22;
+  --rust-red: #D35400;
+  --steel-line: #3F4450;
+  --fern-green: #4A7C59;
+
+  /* --- Base Backgrounds --- */
+  --background-primary: var(--void-black);
+  --background-primary-alt: var(--ash-grey);
+  --background-secondary: var(--ash-grey);
+  --background-secondary-alt: var(--void-black);
+
+  /* --- Text & Typography --- */
+  --text-normal: var(--bone-white);
+  --text-muted: var(--dusty-grey);
+  --text-faint: #5C6370;
+  --text-accent: var(--ember-orange);
+  --text-accent-hover: #F39C12;
+  --text-selection: rgba(230, 126, 34, 0.3);
+
+  /* --- UI Borders & Modifiers --- */
+  --border-color: var(--steel-line);
+  --divider-color: var(--steel-line);
+  --background-modifier-border: var(--steel-line);
+  --background-modifier-hover: var(--stone-slate);
+  --background-modifier-active-hover: var(--steel-line);
+  --background-modifier-form-field: var(--stone-slate);
+
+  /* --- Interactive Elements --- */
+  --interactive-accent: var(--ember-orange);
+  --interactive-accent-hover: var(--rust-red);
+
+  /* --- Headings Visual Hierarchy --- */
+  --h1-color: var(--ember-orange);
+  --h2-color: var(--bone-white);
+  --h3-color: var(--fern-green);
+  --h4-color: var(--dusty-grey);
+  --h5-color: var(--bone-white);
+  --h6-color: var(--dusty-grey);
+
+  /* --- Inline Elements & Tags --- */
+  --tag-color: var(--ember-orange);
+  --tag-background: var(--stone-slate);
+  --tag-background-hover: var(--steel-line);
+  --code-background: var(--ash-grey);
+  --code-normal: var(--bone-white);
+  --text-highlight-bg: rgba(230, 126, 34, 0.25);
+}
+
+/* --- UI High-Contrast Enhancements --- */
+
+/* Tab Headers */
+.theme-dark .workspace-tab-header-container {
+  background-color: var(--void-black);
+  border-bottom: 1px solid var(--steel-line);
+}
+
+.theme-dark .workspace-tab-header.is-active {
+  background-color: var(--ash-grey);
+  color: var(--bone-white);
+  border-top: 2px solid var(--ember-orange);
+}
+
+/* Blockquotes */
+.theme-dark .markdown-rendered blockquote {
+  border-left: 3px solid var(--fern-green);
+  background-color: var(--ash-grey);
+  color: var(--bone-white);
+}
+
+/* Internal Links */
+.theme-dark a.internal-link {
+  color: var(--ember-orange);
+  text-decoration-color: var(--steel-line);
+}
+
+.theme-dark a.internal-link:hover {
+  color: #F39C12;
+  text-decoration: underline;
+}
+
+/* Sidebar & File Explorer Items */
+.theme-dark .nav-file-title.is-active,
+.theme-dark .nav-folder-title.is-active {
+  background-color: var(--stone-slate);
+  color: var(--bone-white);
+}
