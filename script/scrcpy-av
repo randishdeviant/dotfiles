@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+
+# Parameter default
+use_cam=false
+use_mic=false
+cam_facing="back" # Default kamera belakang
+pass_args=()
+
+# Kode warna terminal
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+# Parse argumen
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --cam|-c)
+            use_cam=true
+            shift
+            ;;
+        --mic|-m)
+            use_mic=true
+            shift
+            ;;
+        --front|-f)
+            use_cam=true
+            cam_facing="front"
+            shift
+            ;;
+        --back|-b)
+            use_cam=true
+            cam_facing="back"
+            shift
+            ;;
+        *)
+            pass_args+=("$1")
+            shift
+            ;;
+    esac
+done
+
+# Jika tidak ada flag mic/cam, aktifkan keduanya secara default
+if [ "$use_cam" = false ] && [ "$use_mic" = false ]; then
+    use_cam=true
+    use_mic=true
+fi
+
+# --- Handling Multiple ADB Devices ---
+mapfile -t devices < <(adb devices | grep -v "List of devices attached" | grep "device$" | awk '{print $1}')
+
+if [ ${#devices[@]} -eq 0 ]; then
+    echo -e "${RED}[!] Tidak ada device ADB yang terhubung.${NC}"
+    exit 1
+elif [ ${#devices[@]} -eq 1 ]; then
+    selected_device="${devices[0]}"
+    echo -e "${GREEN}[+] Device terdeteksi: ${selected_device}${NC}"
+else
+    echo -e "${CYAN}[?] Terdeteksi lebih dari 1 ADB device:${NC}"
+    for i in "${!devices[@]}"; do
+        echo "    [$((i+1))] ${devices[$i]}"
+    done
+
+    while true; do
+        read -rp "Pilih nomor device (1-${#devices[@]}): " choice
+        if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le "${#devices[@]}" ]; then
+            selected_device="${devices[$((choice-1))]}"
+            break
+        else
+            echo -e "${RED}Pilihan tidak valid, coba lagi.${NC}"
+        fi
+    done
+    echo -e "${GREEN}[+] Menggunakan device: ${selected_device}${NC}"
+fi
+
+scrcpy_cmd=(scrcpy -s "$selected_device" --no-window)
+
+# Setup Virtual Mic jika dibutuhkan
+sink_id=""
+source_id=""
+if [ "$use_mic" = true ]; then
+    sink_id=$(pactl load-module module-null-sink sink_name=PhoneMic sink_properties=device.description="HP_Mic_Sink")
+    source_id=$(pactl load-module module-remap-source master=PhoneMic.monitor source_name=PhoneMic_Input source_properties=device.description="Virtual_HP_Microphone")
+    scrcpy_cmd+=(--audio-source=mic)
+    echo -e "${GREEN}[+] Virtual Microphone aktif.${NC}"
+else
+    scrcpy_cmd+=(--no-audio)
+fi
+
+# Setup Virtual Camera jika dibutuhkan
+if [ "$use_cam" = true ]; then
+    dev_node=$(v4l2-ctl --list-devices 2>/dev/null | grep -A 1 "Scrcpy Cam" | grep -o "/dev/video[0-9]*" | head -n 1)
+
+    # Auto-load modul v4l2loopback jika node belum ditemukan
+    if [ -z "$dev_node" ]; then
+        echo -e "${YELLOW}[!] Node 'Scrcpy Cam' tidak ditemukan. Memuat modul v4l2loopback...${NC}"
+        sudo modprobe v4l2loopback exclusive_caps=1 card_label="Scrcpy Cam"
+        dev_node=$(v4l2-ctl --list-devices 2>/dev/null | grep -A 1 "Scrcpy Cam" | grep -o "/dev/video[0-9]*" | head -n 1)
+    fi
+
+    if [ -n "$dev_node" ]; then
+        scrcpy_cmd+=(--video-source=camera --v4l2-sink="$dev_node" --camera-facing="$cam_facing")
+
+        # Atur rotasi berdasarkan arah kamera
+        if [ "$cam_facing" = "front" ]; then
+            scrcpy_cmd+=(--capture-orientation=270)
+            echo -e "${GREEN}[+] Virtual Camera aktif ($dev_node) [Depan - 270°].${NC}"
+        else
+            scrcpy_cmd+=(--capture-orientation=90)
+            echo -e "${GREEN}[+] Virtual Camera aktif ($dev_node) [Belakang - 90°].${NC}"
+        fi
+    else
+        echo -e "${RED}[!] Gagal memuat modul v4l2loopback. Kamera dilewati.${NC}"
+        scrcpy_cmd+=(--no-video)
+    fi
+else
+    scrcpy_cmd+=(--no-video)
+fi
+
+# Function cleanup virtual mic saat script dihentikan
+cleanup() {
+    if [ -n "$sink_id" ]; then
+        pactl unload-module "$source_id" 2>/dev/null
+        pactl unload-module "$sink_id" 2>/dev/null
+        echo -e "\n${YELLOW}[-] Virtual Microphone dinonaktifkan.${NC}"
+    fi
+}
+
+# Trap signal EXIT, INT (Ctrl+C), TERM agar cleanup selalu berjalan
+trap cleanup EXIT INT TERM
+
+# Jalankan scrcpy
+"${scrcpy_cmd[@]}" "${pass_args[@]}"

@@ -1,0 +1,64 @@
+#!/bin/bash
+
+TARGET_IP="${1:-192.168.1.4}"
+
+echo "[*] Mencari port Wireless Debugging untuk IP $TARGET_IP..."
+
+# Ekstrak port menggunakan awk berdasarkan blok data
+PORT=$(avahi-browse -rt _adb-tls-connect._tcp --resolv 2>/dev/null \
+    | awk -v ip="$TARGET_IP" '
+        /address =/ { if ($0 ~ ip) found=1 }
+        /port =/ { if (found) { match($0, /[0-9]+/); print substr($0, RSTART, RLENGTH); exit } }
+        /^=/ { found=0 }
+    ')
+
+if [ -z "$PORT" ]; then
+    echo "[-] Gagal menemukan port Wireless Debugging untuk IP $TARGET_IP."
+    echo "    Pastikan Wireless Debugging di HP sudah aktif."
+    exit 1
+fi
+
+echo "[+] Port ditemukan: $PORT"
+echo "[*] Menghubungkan ADB ke $TARGET_IP:$PORT..."
+
+# Coba koneksi ADB
+CONNECT_OUTPUT=$(adb connect "$TARGET_IP:$PORT" 2>&1)
+echo "$CONNECT_OUTPUT"
+
+# Periksa apakah koneksi gagal karena belum dipasangkan
+if echo "$CONNECT_OUTPUT" | grep -qiE "failed|unauthorized|refused"; then
+    echo ""
+    echo "[!] Koneksi gagal/belum dipasangkan. Memulai proses pairing..."
+    echo "[*] Mencari port pairing untuk IP $TARGET_IP..."
+
+    PAIR_PORT=$(avahi-browse -rt _adb-tls-pairing._tcp --resolv 2>/dev/null \
+        | awk -v ip="$TARGET_IP" '
+            /address =/ { if ($0 ~ ip) found=1 }
+            /port =/ { if (found) { match($0, /[0-9]+/); print substr($0, RSTART, RLENGTH); exit } }
+            /^=/ { found=0 }
+        ')
+
+    if [ -z "$PAIR_PORT" ]; then
+        echo "[-] Port pairing tidak ditemukan secara otomatis."
+        read -p "[?] Masukkan port pairing manual (dari layar HP): " PAIR_PORT
+        if [ -z "$PAIR_PORT" ]; then
+            echo "[-] Gagal melakukan pairing tanpa port."
+            exit 1
+        fi
+    else
+        echo "[+] Port pairing ditemukan: $PAIR_PORT"
+    fi
+
+    read -p "[?] Masukkan Pairing Code (6 digit): " PAIR_CODE
+
+    if [ -n "$PAIR_CODE" ]; then
+        echo "[*] Melakukan pairing ke $TARGET_IP:$PAIR_PORT..."
+        adb pair "$TARGET_IP:$PAIR_PORT" "$PAIR_CODE"
+
+        echo "[*] Menghubungkan ulang ADB ke $TARGET_IP:$PORT..."
+        adb connect "$TARGET_IP:$PORT"
+    else
+        echo "[-] Kode pairing tidak diisi. Batal."
+        exit 1
+    fi
+fi
